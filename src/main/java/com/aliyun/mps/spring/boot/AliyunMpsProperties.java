@@ -13,6 +13,8 @@ public class AliyunMpsProperties {
      */
     public static final String PREFIX = "alibaba.cloud.mps";
 
+    private String regionId;
+    
 	/**
 	 * AccessKey, 用于标识、校验用户身份
 	 */
