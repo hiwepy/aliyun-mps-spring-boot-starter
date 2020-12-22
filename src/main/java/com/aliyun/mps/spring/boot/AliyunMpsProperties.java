@@ -14,6 +14,11 @@ public class AliyunMpsProperties {
     public static final String PREFIX = "alibaba.cloud.mps";
 
     /**
+	 * PipelineId, 管道ID
+	 */
+	private String pipelineId;
+    
+    /**
      * Region Id（服务地域ID）
      * https://help.aliyun.com/document_detail/43248.html?spm=a2c4g.11186623.6.560.126f42c3AjZuPl
      * https://help.aliyun.com/document_detail/40654.html?spm=a2c4g.11186623.2.11.37a77f248oCoPp#concept-h4v-j5k-xdb

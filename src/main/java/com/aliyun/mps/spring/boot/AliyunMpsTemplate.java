@@ -27,14 +27,39 @@ public class AliyunMpsTemplate {
 	private final AliyunMpsPipelineOperations pipelineOps = new AliyunMpsPipelineOperations(this);
 	private final AliyunMpsTransformOperations transformOps = new AliyunMpsTransformOperations(this);
 	private final AliyunMpsSnapshotOperations snapshotOps = new AliyunMpsSnapshotOperations(this);
-	private final String ossLocation;
+	
+	/**
+	 * PipelineId, 管道ID
+	 */
+	private final String pipelineId;
+	/**
+     * OSS Bucket 所在数据中心（Region ID）（输入对象），默认：oss-cn-hangzhou
+     * <a href=
+     * "https://help.aliyun.com/document_detail/31837.html?spm=5176.8465980.0.0.4e701450EbA5gw#concept-zt4-cvy-5db">OSS Region和Endpoint对照表</a>.
+     */
+    private final String ossLocation;
+
+    /**
+     * OSS Bucket（输入对象）
+     */
     private final String ossBucket;
+    
+    /**
+     * OSS Bucket 所在数据中心（Region ID）（输出对象），不指定时与 ossLocation 相同；
+     * <a href=
+     * "https://help.aliyun.com/document_detail/31837.html?spm=5176.8465980.0.0.4e701450EbA5gw#concept-zt4-cvy-5db">OSS Region和Endpoint对照表</a>.
+     */
     private final String outputLocation;
+    
+    /**
+     * OSS Bucket（输出对象），不指定时与 ossBucket 相同
+     */
     private final String outputBucket;
 	
 	public AliyunMpsTemplate(IAcsClient acsClient, ObjectMapper objectMapper, AliyunMpsProperties properties) {
 		this.acsClient = acsClient;
 		this.objectMapper = objectMapper;
+		this.pipelineId = properties.getPipelineId();
 		this.ossLocation = properties.getOssLocation();
 		this.ossBucket = properties.getOssBucket();
 		this.outputLocation = StringUtils.hasText(properties.getOutputLocation()) ? properties.getOutputLocation() : properties.getOssLocation();
@@ -91,6 +116,10 @@ public class AliyunMpsTemplate {
 	
 	public ObjectMapper getObjectMapper() {
 		return objectMapper;
+	}
+	
+	public String getPipelineId() {
+		return pipelineId;
 	}
 	
 	public String getOssLocation() {
