@@ -28,13 +28,13 @@ public class AliyunMpsConfiguration {
 		IAcsClient client = new DefaultAcsClient(profile);
 		return client;
 	}
-
+	
 	@Bean
 	@ConditionalOnMissingBean
 	public ObjectMapper objectMapper() {
 		return new ObjectMapper();
 	}
-
+	
 	@Bean
 	public AliyunMpsTemplate aliyunOnsMqTemplate(IAcsClient acsClient,
 			ObjectProvider<ObjectMapper> objectMapperProvider) {

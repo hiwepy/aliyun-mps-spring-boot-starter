@@ -15,10 +15,9 @@
  */
 package com.aliyun.mps.spring.boot.model;
 
-import java.util.List;
-
-import com.aliyun.mps.spring.boot.model.transform.Input;
-import com.aliyun.mps.spring.boot.model.transform.OutputSimple;
+import com.aliyun.mps.spring.boot.model.transform.OutputFile;
+import com.aliyun.mps.spring.boot.model.transform.TileOut;
+import com.aliyun.mps.spring.boot.model.transform.TileOutputFile;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -28,26 +27,35 @@ import lombok.Data;
  * TODO
  * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
  */
-@JsonInclude( JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class TransformRequest {
-	
-	/**
-	 * 转码模板ID。支持自定义转码模板与系统预置模板。
-	 */
-	@JsonProperty("TemplateId")
-	public String templateId;
+public class SnapshotConfig {
 
-	/**
-	 * 作业输入，JSON对象，Input定义详见参数详情 。
-	 */
-	@JsonProperty("Input")
-	public Input input;
+	@JsonProperty("Time")
+	private String time;
+
+	@JsonProperty("Interval")
+	private String interval;
+
+	@JsonProperty("Num")
+	private String num;
+
+	@JsonProperty("Width")
+	private String width;
+
+	@JsonProperty("Height")
+	private String height;
+
+	@JsonProperty("FrameType")
+	private String frameType;
 	
-	/**
-	 * 作业输出，JSON对象，Output定义详见参数详情 。
-	 */
-	@JsonProperty("Outputs")
-	public List<OutputSimple> outputs;
+	@JsonProperty("OutputFile")
+	private OutputFile outputFile;
+	
+	@JsonProperty("TileOutputFile")
+	private TileOutputFile tileOutputFile;
+	
+	@JsonProperty("TileOut")
+	private TileOut tileOut;
 	
 }

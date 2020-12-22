@@ -13,41 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.aliyun.mps.spring.boot.model;
+package com.aliyun.mps.spring.boot.model.transform;
 
-import java.util.List;
-
-import com.aliyun.mps.spring.boot.model.transform.Input;
-import com.aliyun.mps.spring.boot.model.transform.OutputSimple;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
-/**
- * TODO
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
- */
 @JsonInclude( JsonInclude.Include.NON_NULL)
 @Data
-public class TransformRequest {
-	
-	/**
-	 * 转码模板ID。支持自定义转码模板与系统预置模板。
-	 */
-	@JsonProperty("TemplateId")
-	public String templateId;
+public class Container {
 
 	/**
-	 * 作业输入，JSON对象，Input定义详见参数详情 。
+	 * 容器格式;默认值：mp4 
+	 * <ul>
+	 *  <li>视频转码支持flv、mp4、HLS（m3u8+ts）、MPEG-DASH（MPD+fMP4）</li>
+	 *  <li>音频转码支持mp3、mp4、ogg、flac、m4a</li>
+	 *  <li>图片支持gif、WEBP</li>
+	 *  <li>容器格式为gif时，Video Codec设置只能设置为GIF，</li>
+	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP，</li>
+	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
+	 * </ul>
 	 */
-	@JsonProperty("Input")
-	public Input input;
-	
-	/**
-	 * 作业输出，JSON对象，Output定义详见参数详情 。
-	 */
-	@JsonProperty("Outputs")
-	public List<OutputSimple> outputs;
+	@JsonProperty("Format")
+    private String format = "mp4";
 	
 }

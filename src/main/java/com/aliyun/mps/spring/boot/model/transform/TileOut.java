@@ -13,15 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.aliyun.mps.spring.boot;
+package com.aliyun.mps.spring.boot.model.transform;
 
-/**
- * TODO
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
- */
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-public enum OutputFormat {
+import lombok.Data;
 
-	
-	
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+public class TileOut {
+
+	private String lines;
+
+	private String columns;
+
+	private String cellWidth;
+
+	private String cellHeight;
+
+	private String margin;
+
+	private String padding;
+
+	private String color;
+
+	private String isKeepCellPic;
+
+	private String cellSelStep;
 }

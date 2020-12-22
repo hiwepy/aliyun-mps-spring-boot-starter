@@ -13,41 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.aliyun.mps.spring.boot.model;
+package com.aliyun.mps.spring.boot.model.transform;
 
-import java.util.List;
-
-import com.aliyun.mps.spring.boot.model.transform.Input;
-import com.aliyun.mps.spring.boot.model.transform.OutputSimple;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
-/**
- * TODO
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
- */
-@JsonInclude( JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class TransformRequest {
-	
-	/**
-	 * 转码模板ID。支持自定义转码模板与系统预置模板。
-	 */
-	@JsonProperty("TemplateId")
-	public String templateId;
+public class TileOutputFile {
 
-	/**
-	 * 作业输入，JSON对象，Input定义详见参数详情 。
-	 */
-	@JsonProperty("Input")
-	public Input input;
-	
-	/**
-	 * 作业输出，JSON对象，Output定义详见参数详情 。
-	 */
-	@JsonProperty("Outputs")
-	public List<OutputSimple> outputs;
-	
+	@JsonProperty("Bucket")
+	private String bucket;
+
+	@JsonProperty("Location")
+	private String location;
+
+	@JsonProperty("Object")
+	private String object;
+
+	@JsonProperty("RoleArn")
+	private String roleArn;
+
 }

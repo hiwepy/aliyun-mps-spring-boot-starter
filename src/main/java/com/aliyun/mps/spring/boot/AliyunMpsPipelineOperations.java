@@ -54,9 +54,10 @@ public class AliyunMpsPipelineOperations extends AliyunMpsOperations {
 	        System.out.println("PipelineId is:" + response.getPipelineList().get(0).getId());
 	    } catch (ServerException e) {
 	        e.printStackTrace();
+	        log.error("服务端端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    } catch (ClientException e) {
 	        e.printStackTrace();
-	        log.error("导入单个帐号失败， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
+	        log.error("客户端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    }
 	    return response;
 	}
