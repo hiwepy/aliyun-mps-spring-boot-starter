@@ -71,7 +71,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
-	public SubmitJobsResponse submitVideoJob(
+	public SubmitJobsResponse submitJob(
 			String pipelineId, 
 			String templateId,
 			String location,
@@ -80,7 +80,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 			String outputObject,
 			String outputFormat,
 			Video video) throws UnsupportedEncodingException {
-		return this.submitVideoJob(pipelineId, templateId, location, bucket, inputObject, location, bucket, outputObject, outputFormat, video);
+		return this.submitJob(pipelineId, templateId, location, bucket, inputObject, location, bucket, outputObject, outputFormat, video);
 	}
 	
 	/**
@@ -110,7 +110,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
-	public SubmitJobsResponse submitVideoJob(
+	public SubmitJobsResponse submitJob(
 			String pipelineId, 
 			String templateId,
 			String inputLocation,
@@ -176,7 +176,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
-	public SubmitJobsResponse submitAudioJob(
+	public SubmitJobsResponse submitJob(
 			String pipelineId, 
 			String templateId,
 			String location,
@@ -185,7 +185,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 			String outputObject,
 			String outputFormat,
 			Audio audio) throws UnsupportedEncodingException {
-		return this.submitAudioJob(pipelineId, templateId, location, bucket, inputObject, location, bucket, outputObject, outputFormat, audio);
+		return this.submitJob(pipelineId, templateId, location, bucket, inputObject, location, bucket, outputObject, outputFormat, audio);
 	}
 	
 	/**
@@ -215,7 +215,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
-	public SubmitJobsResponse submitAudioJob(
+	public SubmitJobsResponse submitJob(
 			String pipelineId, 
 			String templateId,
 			String inputLocation,
@@ -255,6 +255,69 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		// 3、执行逻辑
 		return this.submitJob(request);
 	}
+	
+	public SubmitJobsResponse submitJob(
+			String templateId,
+			String inputLocation,
+			String inputBucket,
+			String inputObject,
+			String outputObject) throws UnsupportedEncodingException {
+		
+		// 1、转码输入参数
+		Input input = new Input();
+		input.setBucket(inputBucket);
+		input.setLocation(inputLocation);
+		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
+		
+		OutputSimple output = new OutputSimple();
+		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
+		output.setTemplateId(templateId);
+		
+		// 2、创建request，并设置参数
+		SubmitJobsRequest request = new SubmitJobsRequest();
+		
+		request.setInput(getMpsTemplate().writeValueAsString(input));
+		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
+		
+		request.setOutputBucket(inputBucket);
+		request.setOutputLocation(inputLocation);
+		
+		// 3、执行逻辑
+		return this.submitJob(request);
+	}
+	
+	public SubmitJobsResponse submitJob(
+			String templateId,
+			String inputLocation,
+			String inputBucket,
+			String inputObject,
+			String outputLocation,
+			String outputBucket,
+			String outputObject) throws UnsupportedEncodingException {
+		
+		// 1、转码输入参数
+		Input input = new Input();
+		input.setBucket(inputBucket);
+		input.setLocation(inputLocation);
+		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
+		
+		OutputSimple output = new OutputSimple();
+		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
+		output.setTemplateId(templateId);
+		
+		// 2、创建request，并设置参数
+		SubmitJobsRequest request = new SubmitJobsRequest();
+		
+		request.setInput(getMpsTemplate().writeValueAsString(input));
+		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
+		
+		request.setOutputBucket(outputBucket);
+		request.setOutputLocation(outputLocation);
+		
+		// 3、执行逻辑
+		return this.submitJob(request);
+	}
+	
 	
 	/**
 	 * 2、提交转码作业
