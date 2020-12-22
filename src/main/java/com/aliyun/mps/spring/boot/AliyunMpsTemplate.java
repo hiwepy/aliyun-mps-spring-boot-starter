@@ -1,5 +1,7 @@
 package com.aliyun.mps.spring.boot;
 
+import org.springframework.util.StringUtils;
+
 import com.aliyuncs.AcsRequest;
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.CommonRequest;
@@ -25,10 +27,18 @@ public class AliyunMpsTemplate {
 	private final AliyunMpsPipelineOperations pipelineOps = new AliyunMpsPipelineOperations(this);
 	private final AliyunMpsTransformOperations transformOps = new AliyunMpsTransformOperations(this);
 	private final AliyunMpsSnapshotOperations snapshotOps = new AliyunMpsSnapshotOperations(this);
-
-	public AliyunMpsTemplate(IAcsClient acsClient, ObjectMapper objectMapper) {
+	private final String inputLocation;
+    private final String inputBucket;
+    private final String outputLocation;
+    private final String outputBucket;
+	
+	public AliyunMpsTemplate(IAcsClient acsClient, ObjectMapper objectMapper, AliyunMpsProperties properties) {
 		this.acsClient = acsClient;
 		this.objectMapper = objectMapper;
+		this.inputLocation = properties.getInputLocation();
+		this.inputBucket = properties.getInputBucket();
+		this.outputLocation = StringUtils.hasText(properties.getOutputLocation()) ? properties.getOutputLocation() : properties.getInputLocation();
+		this.outputBucket = StringUtils.hasText(properties.getOutputBucket()) ? properties.getOutputBucket() : properties.getInputBucket();
 	}
 	
 	public <T extends AcsResponse> T getAcsResponse(AcsRequest<T> request) throws ServerException, ClientException {
@@ -81,6 +91,22 @@ public class AliyunMpsTemplate {
 	
 	public ObjectMapper getObjectMapper() {
 		return objectMapper;
+	}
+
+	public String getInputLocation() {
+		return inputLocation;
+	}
+
+	public String getInputBucket() {
+		return inputBucket;
+	}
+
+	public String getOutputLocation() {
+		return outputLocation;
+	}
+
+	public String getOutputBucket() {
+		return outputBucket;
 	}
 
 }

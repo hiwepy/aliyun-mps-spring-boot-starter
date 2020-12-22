@@ -319,6 +319,34 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	}
 	
 	
+	public SubmitJobsResponse submitJob(
+			String templateId,
+			String inputObject,
+			String outputObject) throws UnsupportedEncodingException {
+		
+		// 1、转码输入参数
+		Input input = new Input();
+		input.setBucket(getMpsTemplate().getInputBucket());
+		input.setLocation(getMpsTemplate().getInputLocation());
+		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
+		
+		OutputSimple output = new OutputSimple();
+		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
+		output.setTemplateId(templateId);
+		
+		// 2、创建request，并设置参数
+		SubmitJobsRequest request = new SubmitJobsRequest();
+		
+		request.setInput(getMpsTemplate().writeValueAsString(input));
+		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
+		
+		request.setOutputBucket(getMpsTemplate().getOutputBucket());
+		request.setOutputLocation(getMpsTemplate().getOutputLocation());
+		
+		// 3、执行逻辑
+		return this.submitJob(request);
+	}
+	
 	/**
 	 * 2、提交转码作业
 	 * API：

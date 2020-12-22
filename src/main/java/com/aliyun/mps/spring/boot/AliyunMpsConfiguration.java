@@ -37,8 +37,9 @@ public class AliyunMpsConfiguration {
 	
 	@Bean
 	public AliyunMpsTemplate aliyunOnsMqTemplate(IAcsClient acsClient,
-			ObjectProvider<ObjectMapper> objectMapperProvider) {
-		return new AliyunMpsTemplate(acsClient, objectMapperProvider.getIfAvailable());
+			ObjectProvider<ObjectMapper> objectMapperProvider,
+			AliyunMpsProperties properties) {
+		return new AliyunMpsTemplate(acsClient, objectMapperProvider.getIfAvailable(), properties);
 	}
 
 }
