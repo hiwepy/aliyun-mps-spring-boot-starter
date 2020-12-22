@@ -18,25 +18,19 @@ package com.aliyun.mps.spring.boot.model;
 import java.util.List;
 
 import com.aliyun.mps.spring.boot.model.transform.Input;
-import com.aliyun.mps.spring.boot.model.transform.OutputSimple;
+import com.aliyun.mps.spring.boot.model.transform.OutputComplex;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
 /**
- * TODO
+ * 复杂的媒体处理参数对象（支持格式转换、拼接、剪辑）
  * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
  */
 @JsonInclude( JsonInclude.Include.NON_NULL)
 @Data
-public class TransformRequest {
-	
-	/**
-	 * 转码模板ID。支持自定义转码模板与系统预置模板。
-	 */
-	@JsonProperty("TemplateId")
-	public String templateId;
+public class TransformComplexRequest {
 
 	/**
 	 * 作业输入，JSON对象，Input定义详见参数详情 。
@@ -48,6 +42,6 @@ public class TransformRequest {
 	 * 作业输出，JSON对象，Output定义详见参数详情 。
 	 */
 	@JsonProperty("Outputs")
-	public List<OutputSimple> outputs;
+	public List<OutputComplex> outputs;
 	
 }

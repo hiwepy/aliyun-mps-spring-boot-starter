@@ -443,20 +443,7 @@ public class OutputComplex {
  
 		}
 	}
-
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@Data
-	public static class OutputFile {
-
-		private String bucket;
-
-		private String location;
-
-		private String object;
-
-		private String roleArn;
  
-	}
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@Data

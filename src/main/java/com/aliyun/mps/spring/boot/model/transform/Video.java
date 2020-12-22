@@ -37,7 +37,8 @@ public class Video {
 	
 	@JsonProperty("Bitrate")
 	private String bitrate;
-
+	
+	@JsonProperty("Crf")
 	private String crf;
 
 	@JsonProperty("Width")
@@ -45,41 +46,57 @@ public class Video {
 
 	@JsonProperty("Height")
 	private String height;
-
+	
+	@JsonProperty("Fps")
 	private String fps;
 
+	@JsonProperty("Gop")
 	private String gop;
 
+	@JsonProperty("Preset")
 	private String preset;
 
+	@JsonProperty("ScanMode")
 	private String scanMode;
 
+	@JsonProperty("Bufsize")
 	private String bufsize;
 
+	@JsonProperty("Maxrate")
 	private String maxrate;
 
+	@JsonProperty("PixFmt")
 	private String pixFmt;
 
+	@JsonProperty("Degrain")
 	private String degrain;
 
+	@JsonProperty("Qscale")
 	private String qscale;
 
+	@JsonProperty("Crop")
 	private String crop;
 
+	@JsonProperty("Pad")
 	private String pad;
 
+	@JsonProperty("MaxFps")
 	private String maxFps;
 
+	@JsonProperty("ResoPriority")
 	private String resoPriority;
 
+	@JsonProperty("BitrateBnd")
 	private BitrateBnd bitrateBnd;
-	 
+	
 	@JsonInclude( JsonInclude.Include.NON_NULL)
 	@Data
 	public static class BitrateBnd {
 
+		@JsonProperty("Max")
 		private String max;
 
+		@JsonProperty("Min")
 		private String min;
 
 	}

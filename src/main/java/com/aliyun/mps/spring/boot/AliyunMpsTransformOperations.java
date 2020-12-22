@@ -15,12 +15,13 @@
  */
 package com.aliyun.mps.spring.boot;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-import com.aliyun.mps.spring.boot.model.TransformRequest;
-import com.aliyun.mps.spring.boot.model.transform.Audio;
+import com.aliyun.mps.spring.boot.model.TransformComplexRequest;
+import com.aliyun.mps.spring.boot.model.TransformSimpleRequest;
 import com.aliyun.mps.spring.boot.model.transform.Container;
 import com.aliyun.mps.spring.boot.model.transform.Input;
 import com.aliyun.mps.spring.boot.model.transform.OutputSimple;
@@ -29,6 +30,8 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.mts.model.v20140618.CancelJobRequest;
 import com.aliyuncs.mts.model.v20140618.CancelJobResponse;
+import com.aliyuncs.mts.model.v20140618.QueryJobListRequest;
+import com.aliyuncs.mts.model.v20140618.QueryJobListResponse;
 import com.aliyuncs.mts.model.v20140618.SubmitJobsRequest;
 import com.aliyuncs.mts.model.v20140618.SubmitJobsResponse;
 import com.aliyuncs.mts.model.v20140618.SubmitJobsResponse.JobResult;
@@ -48,79 +51,70 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	
 	/**
 	 * 
-	 * 1、提交转码作业
+	 * 1、提交转码作业（基于模板）
 	 * API：
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
-	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
 	 * @param templateId 转码模板ID。支持自定义转码模板与系统预置模板。
-	 * @param location 输入/输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param bucket 输入/输出文件所在OSS Bucket， 例：example-bucket
 	 * @param inputObject 输入的文件名（OSS Object）
 	 * @param outputObject 输出的文件名（OSS Object）
-	 * @param outputFormat 输出的文件名格式（ 默认值：mp4），
-	 * <ul>
-	 *  <li>视频转码支持flv、mp4、HLS（m3u8+ts）、MPEG-DASH（MPD+fMP4）</li>
-	 *  <li>音频转码支持mp3、mp4、ogg、flac、m4a</li>
-	 *  <li>图片支持gif、WEBP</li>
-	 *  <li>容器格式为gif时，Video Codec设置只能设置为GIF</li>
-	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP</li>
-	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
-	 * </ul>
-	 * @param audio 输出的Audio配置
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws Exception 
 	 */
 	public SubmitJobsResponse submitJob(
-			String pipelineId, 
 			String templateId,
-			String location,
-			String bucket,
 			String inputObject,
-			String outputObject,
-			String outputFormat,
-			Video video) throws UnsupportedEncodingException {
-		return this.submitJob(pipelineId, templateId, location, bucket, inputObject, location, bucket, outputObject, outputFormat, video);
+			String outputObject) throws Exception {
+		
+		// 1、转码输入参数
+		Input input = new Input();
+		input.setBucket(getMpsTemplate().getOssBucket());
+		input.setLocation(getMpsTemplate().getOssLocation());
+		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
+		
+		OutputSimple output = new OutputSimple();
+		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
+		output.setTemplateId(templateId);
+		
+		// Ouput->Video
+		Video video = new Video();
+		video.setCodec("H.264");
+		output.setVideo(video);
+        
+		// 2、创建request，并设置参数
+		SubmitJobsRequest request = new SubmitJobsRequest();
+		
+		request.setInput(getMpsTemplate().writeValueAsString(input));
+		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
+		
+		request.setPipelineId(getMpsTemplate().getPipelineId());
+		request.setOutputBucket(getMpsTemplate().getOutputBucket());
+		request.setOutputLocation(getMpsTemplate().getOutputLocation());
+		
+		// 3、执行逻辑
+		return this.submitJob(request);
 	}
 	
 	/**
 	 * 
-	 * 1、提交转码作业
+	 * 2、提交转码作业（基于模板）
 	 * API：
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
-	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
 	 * @param templateId 转码模板ID。支持自定义转码模板与系统预置模板。
 	 * @param ossLocation 输入OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
 	 * @param ossBucket 输入文件所在OSS Bucket， 例：example-bucket
 	 * @param inputObject 输入的文件名（OSS Object）
-	 * @param outputLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param outputBucket 输出的文件名（OSS Object）
 	 * @param outputObject 输出的文件名（OSS Object）
-	 * @param outputFormat 输出的文件名格式（ 默认值：mp4），
-	 * <ul>
-	 *  <li>视频转码支持flv、mp4、HLS（m3u8+ts）、MPEG-DASH（MPD+fMP4）</li>
-	 *  <li>音频转码支持mp3、mp4、ogg、flac、m4a</li>
-	 *  <li>图片支持gif、WEBP</li>
-	 *  <li>容器格式为gif时，Video Codec设置只能设置为GIF</li>
-	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP</li>
-	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
-	 * </ul>
-	 * @param audio 输出的Audio配置
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws Exception 
 	 */
 	public SubmitJobsResponse submitJob(
-			String pipelineId, 
 			String templateId,
 			String ossLocation,
 			String ossBucket,
 			String inputObject,
-			String outputLocation,
-			String outputBucket,
-			String outputObject,
-			String outputFormat,
-			Video video) throws UnsupportedEncodingException {
+			String outputObject) throws Exception {
 		
 		// 1、转码输入参数
 		Input input = new Input();
@@ -132,20 +126,15 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
 		output.setTemplateId(templateId);
 		
-		Container container = new Container();
-		container.setFormat(outputFormat);
-		output.setContainer(container);
-		output.setVideo(video);
-		
 		// 2、创建request，并设置参数
 		SubmitJobsRequest request = new SubmitJobsRequest();
 		
 		request.setInput(getMpsTemplate().writeValueAsString(input));
 		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
 		
-		request.setPipelineId(pipelineId);
-		request.setOutputBucket(outputBucket);
-		request.setOutputLocation(outputLocation);
+		request.setPipelineId(getMpsTemplate().getPipelineId());
+		request.setOutputBucket(ossBucket);
+		request.setOutputLocation(ossLocation);
 		
 		// 3、执行逻辑
 		return this.submitJob(request);
@@ -153,44 +142,54 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	
 	/**
 	 * 
-	 * 1、提交转码作业
+	 * 3、提交转码作业
 	 * API：
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
-	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
 	 * @param templateId 转码模板ID。支持自定义转码模板与系统预置模板。
-	 * @param location 输入/输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param bucket 输入/输出文件所在OSS Bucket， 例：example-bucket
+	 * @param ossLocation 输入OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
+	 * @param ossBucket 输入文件所在OSS Bucket， 例：example-bucket
 	 * @param inputObject 输入的文件名（OSS Object）
+	 * @param outputLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
+	 * @param outputBucket 输出的文件名（OSS Object）
 	 * @param outputObject 输出的文件名（OSS Object）
-	 * @param outputFormat 输出的文件名格式（ 默认值：mp4），
-	 * <ul>
-	 *  <li>视频转码支持flv、mp4、HLS（m3u8+ts）、MPEG-DASH（MPD+fMP4）</li>
-	 *  <li>音频转码支持mp3、mp4、ogg、flac、m4a</li>
-	 *  <li>图片支持gif、WEBP</li>
-	 *  <li>容器格式为gif时，Video Codec设置只能设置为GIF</li>
-	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP</li>
-	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
-	 * </ul>
-	 * @param audio 输出的Audio配置
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws Exception 
 	 */
 	public SubmitJobsResponse submitJob(
-			String pipelineId, 
 			String templateId,
-			String location,
-			String bucket,
+			String ossLocation,
+			String ossBucket,
 			String inputObject,
-			String outputObject,
-			String outputFormat,
-			Audio audio) throws UnsupportedEncodingException {
-		return this.submitJob(pipelineId, templateId, location, bucket, inputObject, location, bucket, outputObject, outputFormat, audio);
+			String outputLocation,
+			String outputBucket,
+			String outputObject) throws Exception {
+		
+		// 1、转码输入参数
+		Input input = new Input();
+		input.setBucket(ossBucket);
+		input.setLocation(ossLocation);
+		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
+		
+		OutputSimple output = new OutputSimple();
+		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
+		output.setTemplateId(templateId);
+		
+		// 2、创建request，并设置参数
+		SubmitJobsRequest request = new SubmitJobsRequest();
+		request.setInput(getMpsTemplate().writeValueAsString(input));
+		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
+		request.setOutputBucket(outputBucket);
+		request.setOutputLocation(outputLocation);
+		request.setPipelineId(getMpsTemplate().getPipelineId());
+		
+		// 3、执行逻辑
+		return this.submitJob(request);
 	}
 	
 	/**
 	 * 
-	 * 1、提交转码作业
+	 * 4、提交转码作业
 	 * API：
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
@@ -211,9 +210,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP</li>
 	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
 	 * </ul>
-	 * @param audio 输出的Audio配置
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws Exception 
 	 */
 	public SubmitJobsResponse submitJob(
 			String pipelineId, 
@@ -224,8 +222,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 			String outputLocation,
 			String outputBucket,
 			String outputObject,
-			String outputFormat,
-			Audio audio) throws UnsupportedEncodingException {
+			String outputFormat) throws Exception {
 		
 		// 1、转码输入参数
 		Input input = new Input();
@@ -240,7 +237,6 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		Container container = new Container();
 		container.setFormat(outputFormat);
 		output.setContainer(container);
-		output.setAudio(audio);
 		
 		// 2、创建request，并设置参数
 		SubmitJobsRequest request = new SubmitJobsRequest();
@@ -256,154 +252,125 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		return this.submitJob(request);
 	}
 	
+
+	/**
+	 * 5、提交复杂转码作业
+	 * API：
+	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
+	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
+	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
+	 * @param outputLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
+	 * @param outputBucket 输出的文件名（OSS Object）
+	 * @param transRequest 媒体处理参数对象（支持格式转换、拼接、剪辑）
+	 * @return
+	 * @throws Exception 
+	 */
 	public SubmitJobsResponse submitJob(
-			String templateId,
-			String ossLocation,
-			String ossBucket,
-			String inputObject,
-			String outputObject) throws UnsupportedEncodingException {
-		
-		// 1、转码输入参数
-		Input input = new Input();
-		input.setBucket(ossBucket);
-		input.setLocation(ossLocation);
-		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
-		
-		OutputSimple output = new OutputSimple();
-		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
-		output.setTemplateId(templateId);
-		
-		// 2、创建request，并设置参数
-		SubmitJobsRequest request = new SubmitJobsRequest();
-		
-		request.setInput(getMpsTemplate().writeValueAsString(input));
-		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
-		
-		request.setPipelineId(getMpsTemplate().getPipelineId());
-		request.setOutputBucket(ossBucket);
-		request.setOutputLocation(ossLocation);
-		
-		// 3、执行逻辑
-		return this.submitJob(request);
-	}
-	
-	public SubmitJobsResponse submitJob(
-			String templateId,
-			String ossLocation,
-			String ossBucket,
-			String inputObject,
+			String pipelineId, 
 			String outputLocation,
 			String outputBucket,
-			String outputObject) throws UnsupportedEncodingException {
-		
-		// 1、转码输入参数
-		Input input = new Input();
-		input.setBucket(ossBucket);
-		input.setLocation(ossLocation);
-		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
-		
-		OutputSimple output = new OutputSimple();
-		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
-		output.setTemplateId(templateId);
-		
-		// 2、创建request，并设置参数
+			TransformComplexRequest transRequest) throws Exception {
+		// 1、创建request，并设置参数
 		SubmitJobsRequest request = new SubmitJobsRequest();
-		
-		request.setInput(getMpsTemplate().writeValueAsString(input));
-		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
-		
-		request.setPipelineId(getMpsTemplate().getPipelineId());
-		request.setOutputBucket(outputBucket);
+		// 2、转码参数设置
+		request.setInput(getMpsTemplate().writeValueAsString(transRequest.getInput()));
+		request.setOutputs(getMpsTemplate().writeValueAsString(transRequest.getOutputs()));
 		request.setOutputLocation(outputLocation);
-		
+		request.setOutputBucket(outputBucket);
+		request.setPipelineId(pipelineId);
 		// 3、执行逻辑
 		return this.submitJob(request);
 	}
 	
-	
+	/**
+	 * 6、提交简单转码作业
+	 * API：
+	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
+	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
+	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
+	 * @param outputLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
+	 * @param outputBucket 输出的文件名（OSS Object）
+	 * @param transRequest 媒体处理参数对象（仅做格式转换）
+	 * @return
+	 * @throws Exception 
+	 */
 	public SubmitJobsResponse submitJob(
-			String templateId,
-			String inputObject,
-			String outputObject) throws UnsupportedEncodingException {
-		
-		// 1、转码输入参数
-		Input input = new Input();
-		input.setBucket(getMpsTemplate().getOssBucket());
-		input.setLocation(getMpsTemplate().getOssLocation());
-		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
-		
-		OutputSimple output = new OutputSimple();
-		output.setOutputObject(URLEncoder.encode(outputObject, "utf-8"));
-		output.setTemplateId(templateId);
-		
-		// 2、创建request，并设置参数
+			String pipelineId, 
+			String outputLocation,
+			String outputBucket,
+			TransformSimpleRequest transRequest) throws Exception {
+		// 1、创建request，并设置参数
 		SubmitJobsRequest request = new SubmitJobsRequest();
-		
-		request.setInput(getMpsTemplate().writeValueAsString(input));
-		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
-		
-		request.setPipelineId(getMpsTemplate().getPipelineId());
+		// 2、转码参数设置
+		request.setInput(getMpsTemplate().writeValueAsString(transRequest.getInput()));
+		request.setOutputs(getMpsTemplate().writeValueAsString(transRequest.getOutputs()));
+		request.setOutputLocation(outputLocation);
+		request.setOutputBucket(outputBucket);
+		request.setPipelineId(pipelineId);
+		// 3、执行逻辑
+		return this.submitJob(request);
+	}
+	
+	/**
+	 * 7、提交转码作业
+	 * API：
+	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
+	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
+	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
+	 * @param transRequest 媒体处理参数对象（支持格式转换、拼接、剪辑）
+	 * @return
+	 * @throws Exception 
+	 */
+	public SubmitJobsResponse submitJob(
+			String pipelineId, 
+			TransformComplexRequest transRequest) throws Exception {
+		// 1、创建request，并设置参数
+		SubmitJobsRequest request = new SubmitJobsRequest();
+		// 2、转码参数设置
+		request.setInput(getMpsTemplate().writeValueAsString(transRequest.getInput()));
+		request.setOutputs(getMpsTemplate().writeValueAsString(transRequest.getOutputs()));
 		request.setOutputBucket(getMpsTemplate().getOutputBucket());
 		request.setOutputLocation(getMpsTemplate().getOutputLocation());
-		
+		request.setPipelineId(pipelineId);
 		// 3、执行逻辑
 		return this.submitJob(request);
 	}
 	
+
 	/**
-	 * 2、提交转码作业
+	 * 8、提交转码作业
 	 * API：
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
 	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
-	 * @param ossLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param ossBucket 输出的文件名（OSS Object）
-	 * @param transRequest 转换情况去年是
+	 * @param transRequest 媒体处理参数对象（仅做格式转换）
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws Exception 
 	 */
 	public SubmitJobsResponse submitJob(
 			String pipelineId, 
-			TransformRequest transRequest) throws UnsupportedEncodingException {
+			TransformSimpleRequest transRequest) throws Exception {
 		// 1、创建request，并设置参数
 		SubmitJobsRequest request = new SubmitJobsRequest();
 		// 2、转码参数设置
 		request.setInput(getMpsTemplate().writeValueAsString(transRequest.getInput()));
 		request.setOutputs(getMpsTemplate().writeValueAsString(transRequest.getOutputs()));
+		request.setOutputBucket(getMpsTemplate().getOutputBucket());
+		request.setOutputLocation(getMpsTemplate().getOutputLocation());
 		request.setPipelineId(pipelineId);
 		// 3、执行逻辑
 		return this.submitJob(request);
 	}
 	
 	/**
-	 * 2、提交转码作业
+	 * 9、提交转码作业
 	 * API：
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
-	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
-	 * @param ossLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param ossBucket 输出的文件名（OSS Object）
-	 * @param transRequest 转换情况去年是
+	 * @param request 媒体处理请求对象
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws Exception 
 	 */
-	public SubmitJobsResponse submitJob(
-			String pipelineId, 
-			String ossLocation,
-			String ossBucket,
-			TransformRequest transRequest) throws UnsupportedEncodingException {
-		// 1、创建request，并设置参数
-		SubmitJobsRequest request = new SubmitJobsRequest();
-		// 2、转码参数设置
-		request.setInput(getMpsTemplate().writeValueAsString(transRequest.getInput()));
-		request.setOutputLocation(ossLocation);
-		request.setOutputBucket(ossBucket);
-		request.setOutputs(getMpsTemplate().writeValueAsString(transRequest.getOutputs()));
-		request.setPipelineId(pipelineId);
-		// 3、执行逻辑
-		return this.submitJob(request);
-	}
-	
 	public SubmitJobsResponse submitJob(SubmitJobsRequest request) {
 		// 发起请求并处理应答或异常
         SubmitJobsResponse response;
@@ -428,7 +395,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	}
 	
 	/**
-	 * 2、取消转码作业
+	 * 10、取消转码作业
 	 * https://help.aliyun.com/document_detail/29227.html?spm=a2c4g.11186623.6.660.3a887b70IFShlS#h2-url-4
 	 * @param jobId 作业ID
 	 * @return
@@ -442,6 +409,34 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
             response = getMpsTemplate().getAcsResponse(request);
             log.debug("RequestId is:{}", response.getRequestId());
             log.debug("JobId is:{}", response.getJobId());
+        } catch (ServerException e) {
+	        e.printStackTrace();
+	        log.error("服务端端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
+	    } catch (ClientException e) {
+	        e.printStackTrace();
+	        log.error("客户端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
+	    }
+		return null;
+	}
+	
+	/**
+	 * 11、通过转码作业ID，批量查询转码作业，返回默认按CreationTime降序排列。
+	 * https://help.aliyun.com/document_detail/29228.html?spm=a2c4g.11186623.6.661.76297b70FlJ85G
+	 * @param jobIds 转码作业ID列表，逗号分隔，一次最多10个
+	 * @return
+	 */
+	public QueryJobListResponse queryJob( String... jobIds) {
+		if(Objects.isNull(jobIds) || jobIds.length == 0) {
+			return null;
+		}
+		QueryJobListRequest request = new QueryJobListRequest();
+		request.setJobIds(Arrays.asList(jobIds).stream().collect(Collectors.joining(",")));
+		// 发起请求并处理应答或异常
+		QueryJobListResponse response;
+        try {
+            response = getMpsTemplate().getAcsResponse(request);
+            log.debug("RequestId is:{}", response.getRequestId());
+            log.debug("JobList is:{}", getMpsTemplate().writeValueAsString(response.getJobList()));
         } catch (ServerException e) {
 	        e.printStackTrace();
 	        log.error("服务端端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());

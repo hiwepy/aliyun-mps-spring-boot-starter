@@ -31,7 +31,7 @@ public class AliyunMpsConfiguration {
 		// 创建DefaultAcsClient实例并初始化
 		DefaultProfile profile = DefaultProfile.getProfile(properties.getRegionId(), // 地域ID
 				properties.getAccessKey(), // RAM账号的AccessKey ID
-				properties.getAccessKey()); // RAM账号Access Key Secret
+				properties.getSecretKey()); // RAM账号Access Key Secret
 		IAcsClient acsClient = new DefaultAcsClient(profile);
 		
 		return new AliyunMpsTemplate(acsClient, objectMapper, properties);
