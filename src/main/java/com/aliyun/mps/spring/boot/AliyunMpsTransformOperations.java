@@ -94,8 +94,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @param inputLocation 输入OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
 	 * @param inputBucket 输入文件所在OSS Bucket， 例：example-bucket
 	 * @param inputObject 输入的文件名（OSS Object）
-	 * @param outputLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param outputBucket 输出的文件名（OSS Object）
+	 * @param ossLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
+	 * @param ossBucket 输出的文件名（OSS Object）
 	 * @param outputObject 输出的文件名（OSS Object）
 	 * @param outputFormat 输出的文件名格式（ 默认值：mp4），
 	 * <ul>
@@ -116,8 +116,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 			String inputLocation,
 			String inputBucket,
 			String inputObject,
-			String outputLocation,
-			String outputBucket,
+			String ossLocation,
+			String ossBucket,
 			String outputObject,
 			String outputFormat,
 			Video video) throws UnsupportedEncodingException {
@@ -144,8 +144,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
 		
 		request.setPipelineId(pipelineId);
-		request.setOutputBucket(outputBucket);
-		request.setOutputLocation(outputLocation);
+		request.setOutputBucket(ossBucket);
+		request.setOutputLocation(ossLocation);
 		
 		// 3、执行逻辑
 		return this.submitJob(request);
@@ -199,8 +199,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @param inputLocation 输入OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
 	 * @param inputBucket 输入文件所在OSS Bucket， 例：example-bucket
 	 * @param inputObject 输入的文件名（OSS Object）
-	 * @param outputLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param outputBucket 输出的文件名（OSS Object）
+	 * @param ossLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
+	 * @param ossBucket 输出的文件名（OSS Object）
 	 * @param outputObject 输出的文件名（OSS Object）
 	 * @param outputFormat 输出的文件名格式（ 默认值：mp4），
 	 * <ul>
@@ -221,8 +221,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 			String inputLocation,
 			String inputBucket,
 			String inputObject,
-			String outputLocation,
-			String outputBucket,
+			String ossLocation,
+			String ossBucket,
 			String outputObject,
 			String outputFormat,
 			Audio audio) throws UnsupportedEncodingException {
@@ -249,8 +249,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
 		
 		request.setPipelineId(pipelineId);
-		request.setOutputBucket(outputBucket);
-		request.setOutputLocation(outputLocation);
+		request.setOutputBucket(ossBucket);
+		request.setOutputLocation(ossLocation);
 		
 		// 3、执行逻辑
 		return this.submitJob(request);
@@ -291,8 +291,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 			String inputLocation,
 			String inputBucket,
 			String inputObject,
-			String outputLocation,
-			String outputBucket,
+			String ossLocation,
+			String ossBucket,
 			String outputObject) throws UnsupportedEncodingException {
 		
 		// 1、转码输入参数
@@ -311,8 +311,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		request.setInput(getMpsTemplate().writeValueAsString(input));
 		request.setOutputs(getMpsTemplate().writeValueAsString(Arrays.asList(output)));
 		
-		request.setOutputBucket(outputBucket);
-		request.setOutputLocation(outputLocation);
+		request.setOutputBucket(ossBucket);
+		request.setOutputLocation(ossLocation);
 		
 		// 3、执行逻辑
 		return this.submitJob(request);
@@ -326,8 +326,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		
 		// 1、转码输入参数
 		Input input = new Input();
-		input.setBucket(getMpsTemplate().getInputBucket());
-		input.setLocation(getMpsTemplate().getInputLocation());
+		input.setBucket(getMpsTemplate().getOssBucket());
+		input.setLocation(getMpsTemplate().getOssLocation());
 		input.setObject(URLEncoder.encode(inputObject, "utf-8"));
 		
 		OutputSimple output = new OutputSimple();
@@ -353,8 +353,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
 	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
-	 * @param outputLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param outputBucket 输出的文件名（OSS Object）
+	 * @param ossLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
+	 * @param ossBucket 输出的文件名（OSS Object）
 	 * @param transRequest 转换情况去年是
 	 * @return
 	 * @throws UnsupportedEncodingException 
@@ -378,23 +378,23 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
 	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
-	 * @param outputLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param outputBucket 输出的文件名（OSS Object）
+	 * @param ossLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
+	 * @param ossBucket 输出的文件名（OSS Object）
 	 * @param transRequest 转换情况去年是
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
 	public SubmitJobsResponse submitJob(
 			String pipelineId, 
-			String outputLocation,
-			String outputBucket,
+			String ossLocation,
+			String ossBucket,
 			TransformRequest transRequest) throws UnsupportedEncodingException {
 		// 1、创建request，并设置参数
 		SubmitJobsRequest request = new SubmitJobsRequest();
 		// 2、转码参数设置
 		request.setInput(getMpsTemplate().writeValueAsString(transRequest.getInput()));
-		request.setOutputLocation(outputLocation);
-		request.setOutputBucket(outputBucket);
+		request.setOutputLocation(ossLocation);
+		request.setOutputBucket(ossBucket);
 		request.setOutputs(getMpsTemplate().writeValueAsString(transRequest.getOutputs()));
 		request.setPipelineId(pipelineId);
 		// 3、执行逻辑

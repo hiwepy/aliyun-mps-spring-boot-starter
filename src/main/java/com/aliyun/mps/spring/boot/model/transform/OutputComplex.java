@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * TODO
+ * https://help.aliyun.com/document_detail/29212.html?spm=a2c4g.11174283.6.645.3b01556e9weKGZ
  * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
