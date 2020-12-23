@@ -115,7 +115,7 @@ public class AliyunMpsSnapshotOperations extends AliyunMpsOperations {
 	
 	public SubmitSnapshotJobResponse submitJob(SubmitSnapshotJobRequest request) {
 		// call api
-        SubmitSnapshotJobResponse response;
+        SubmitSnapshotJobResponse response = null;
         try {
             response = getMpsTemplate().getAcsResponse(request);
             log.debug("RequestId is:{}", response.getRequestId());
@@ -127,7 +127,7 @@ public class AliyunMpsSnapshotOperations extends AliyunMpsOperations {
 	        e.printStackTrace();
 	        log.error("客户端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    }
-		return null;
+		return response;
 	}
 	
 }

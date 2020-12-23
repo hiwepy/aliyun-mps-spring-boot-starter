@@ -373,7 +373,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 */
 	public SubmitJobsResponse submitJob(SubmitJobsRequest request) {
 		// 发起请求并处理应答或异常
-        SubmitJobsResponse response;
+        SubmitJobsResponse response = null;
         try {
             response = getMpsTemplate().getAcsResponse(request);
             log.debug("RequestId is:{}", response.getRequestId());
@@ -391,7 +391,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	        e.printStackTrace();
 	        log.error("客户端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    }
-		return null;
+		return response;
 	}
 	
 	/**
@@ -404,7 +404,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		CancelJobRequest request = new CancelJobRequest();
 		request.setJobId(jobId);
 		// 发起请求并处理应答或异常
-		CancelJobResponse response;
+		CancelJobResponse response = null;
         try {
             response = getMpsTemplate().getAcsResponse(request);
             log.debug("RequestId is:{}", response.getRequestId());
@@ -416,7 +416,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	        e.printStackTrace();
 	        log.error("客户端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    }
-		return null;
+		return response;
 	}
 	
 	/**
@@ -432,7 +432,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 		QueryJobListRequest request = new QueryJobListRequest();
 		request.setJobIds(Arrays.asList(jobIds).stream().collect(Collectors.joining(",")));
 		// 发起请求并处理应答或异常
-		QueryJobListResponse response;
+		QueryJobListResponse response = null;
         try {
             response = getMpsTemplate().getAcsResponse(request);
             log.debug("RequestId is:{}", response.getRequestId());
@@ -444,7 +444,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	        e.printStackTrace();
 	        log.error("客户端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    }
-		return null;
+		return response;
 	}
 	
 }
