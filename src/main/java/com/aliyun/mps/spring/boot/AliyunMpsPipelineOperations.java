@@ -38,9 +38,7 @@ public class AliyunMpsPipelineOperations extends AliyunMpsOperations {
 	 * API：
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
-	 * @param userId 业务用户ID
-	 * @param nickname 用户昵称
-	 * @param avatar 用户头像
+	 * @param pipelineId 业务ID
 	 * @return 操作结果
 	 */
 	public SearchPipelineResponse search(String pipelineId) {

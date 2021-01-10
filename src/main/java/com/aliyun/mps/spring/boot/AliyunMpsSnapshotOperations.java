@@ -16,7 +16,6 @@
 package com.aliyun.mps.spring.boot;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.aliyun.mps.spring.boot.model.SnapshotConfig;
@@ -63,9 +62,9 @@ public class AliyunMpsSnapshotOperations extends AliyunMpsOperations {
 	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP</li>
 	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
 	 * </ul>
-	 * @param audio 输出的Audio配置
-	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @param config 输出配置
+	 * @return 操作结果
+	 * @throws IOException 如果错则抛出异常
 	 */
 	public SubmitSnapshotJobResponse submitJob(
 			String pipelineId, 

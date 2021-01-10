@@ -58,8 +58,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @param templateId 转码模板ID。支持自定义转码模板与系统预置模板。
 	 * @param inputObject 输入的文件名（OSS Object）
 	 * @param outputObject 输出的文件名（OSS Object）
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
+	 * @throws Exception 如果错则抛出异常
 	 */
 	public SubmitJobsResponse submitJob(
 			String templateId,
@@ -106,8 +106,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @param ossBucket 输入文件所在OSS Bucket， 例：example-bucket
 	 * @param inputObject 输入的文件名（OSS Object）
 	 * @param outputObject 输出的文件名（OSS Object）
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
+	 * @throws Exception 如果错则抛出异常
 	 */
 	public SubmitJobsResponse submitJob(
 			String templateId,
@@ -153,8 +153,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @param outputLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
 	 * @param outputBucket 输出的文件名（OSS Object）
 	 * @param outputObject 输出的文件名（OSS Object）
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
+	 * @throws Exception 如果错则抛出异常
 	 */
 	public SubmitJobsResponse submitJob(
 			String templateId,
@@ -210,8 +210,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP</li>
 	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
 	 * </ul>
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
+	 * @throws Exception 如果错则抛出异常
 	 */
 	public SubmitJobsResponse submitJob(
 			String pipelineId, 
@@ -262,8 +262,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @param outputLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
 	 * @param outputBucket 输出的文件名（OSS Object）
 	 * @param transRequest 媒体处理参数对象（支持格式转换、拼接、剪辑）
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
+	 * @throws Exception 如果错则抛出异常
 	 */
 	public SubmitJobsResponse submitJob(
 			String pipelineId, 
@@ -291,8 +291,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * @param outputLocation 输出 OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
 	 * @param outputBucket 输出的文件名（OSS Object）
 	 * @param transRequest 媒体处理参数对象（仅做格式转换）
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
+	 * @throws Exception 如果错则抛出异常
 	 */
 	public SubmitJobsResponse submitJob(
 			String pipelineId, 
@@ -318,8 +318,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
 	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
 	 * @param transRequest 媒体处理参数对象（支持格式转换、拼接、剪辑）
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
+	 * @throws Exception 如果错则抛出异常
 	 */
 	public SubmitJobsResponse submitJob(
 			String pipelineId, 
@@ -344,8 +344,8 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
 	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
 	 * @param transRequest 媒体处理参数对象（仅做格式转换）
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
+	 * @throws Exception 如果错则抛出异常
 	 */
 	public SubmitJobsResponse submitJob(
 			String pipelineId, 
@@ -368,8 +368,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
 	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
 	 * @param request 媒体处理请求对象
-	 * @return
-	 * @throws Exception 
+	 * @return 操作结果
 	 */
 	public SubmitJobsResponse submitJob(SubmitJobsRequest request) {
 		// 发起请求并处理应答或异常
@@ -398,7 +397,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * 10、取消转码作业
 	 * https://help.aliyun.com/document_detail/29227.html?spm=a2c4g.11186623.6.660.3a887b70IFShlS#h2-url-4
 	 * @param jobId 作业ID
-	 * @return
+	 * @return 操作结果
 	 */
 	public CancelJobResponse cancelJob( String jobId) {
 		CancelJobRequest request = new CancelJobRequest();
@@ -423,7 +422,7 @@ public class AliyunMpsTransformOperations extends AliyunMpsOperations {
 	 * 11、通过转码作业ID，批量查询转码作业，返回默认按CreationTime降序排列。
 	 * https://help.aliyun.com/document_detail/29228.html?spm=a2c4g.11186623.6.661.76297b70FlJ85G
 	 * @param jobIds 转码作业ID列表，逗号分隔，一次最多10个
-	 * @return
+	 * @return 操作结果
 	 */
 	public QueryJobListResponse queryJob( String... jobIds) {
 		if(Objects.isNull(jobIds) || jobIds.length == 0) {
