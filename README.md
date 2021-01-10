@@ -2,7 +2,7 @@
 
 #### 组件简介
 
- > 基于 ons-client 实现的 Spring Boot Starter 实现，依赖少，使用简单
+ > 基于阿里云视频转码实现的 Spring Boot Starter 实现，依赖少，使用简单
 
 #### 使用说明
 
@@ -11,7 +11,7 @@
 ``` xml
 <dependency>
 	<groupId>com.github.hiwepy</groupId>
-	<artifactId>aliyun-ons-spring-boot-starter</artifactId>
+	<artifactId>aliyun-mps-spring-boot-starter</artifactId>
 	<version>${project.version}</version>
 </dependency>
 ```
@@ -20,15 +20,16 @@
 
 ```yaml
 #################################################################################################
-### 阿里云Ons配置：
+### 阿里云Mps配置：
 #################################################################################################
-aliyun:
-  ons:
-    access-key: test
-    secret-key: test
-    name-srv-addr: http://zzzz.mq-internet-access.mq-internet.aliyuncs.com
-    message-model: CLUSTERING    
-    group-id: DEFAULT
+alibaba:
+  cloud:
+    mps:
+      access-key: test
+      secret-key: test
+      oss-location: ss
+      oss-bucket: ss
+      region-id: hangzhou
 ```
 
 ##### 3、使用示例
@@ -40,35 +41,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.aliyun.openservices.ons.api.Message;
-import com.aliyun.openservices.ons.api.Producer;
-import com.aliyun.openservices.ons.api.order.OrderProducer;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AliyunOnsMqApplicationTests {
+public class AliyunMpsApplicationTests {
 
 	@Autowired
-	private AliyunOnsMqTemplate onsMqTemplate;
-	@Autowired
-	private OrderProducer orderProducer;
-	@Autowired
-	private Producer producer;
+	private AliyunMpsTemplate mpsTemplate;
 	
     @Test
     public void testProducer() throws Exception {
-    	Message message = new Message();
-    	onsMqTemplate.sendAsyncMes(producer, message);
     }
     
-    @Test
-    public void testOrderProducer() throws Exception {
-    	Message message = new Message();
-    	onsMqTemplate.sendOrderMes(orderProducer, message, "");
-    }
 
 }
-
 ```
 
 ## Jeebiz 技术社区

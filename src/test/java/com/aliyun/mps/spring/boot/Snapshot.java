@@ -1,4 +1,4 @@
-package com.aliyun.openservices.spring.boot;
+package com.aliyun.mps.spring.boot;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

@@ -1,5 +1,2 @@
-alibaba:  cloud:    ons:      access-key: test
-      secret-key: test
-      name-srv-addr: http://zzzz.mq-internet-access.mq-internet.aliyuncs.com
-      message-model: CLUSTERING    
-      group-id: DEFAULT
+alibaba:  cloud:    mps:      access-key: test
+      secret-key: test      oss-location: ss      oss-bucket: ss      region-id: hangzhou
