@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -14,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @ConditionalOnClass({ SubmitJobsRequest.class })
-@EnableConfigurationProperties(AliyunMpsProperties.class)
+@EnableConfigurationProperties({AliyunProperties.class, AliyunMpsProperties.class})
 public class AliyunMpsConfiguration {
 
 	@Bean
@@ -26,15 +27,23 @@ public class AliyunMpsConfiguration {
 	@Bean
 	public AliyunMpsTemplate aliyunMpsTemplate(
 			ObjectMapper objectMapper,
-			AliyunMpsProperties properties) {
+			AliyunProperties properties,
+			AliyunMpsProperties mpsProperties) {
+		
+		/**
+		 * RAM账号的AccessKey ID, 用于标识、校验用户身份
+		 */
+		String accessKey = StringUtils.hasText(mpsProperties.getAccessKey()) ? mpsProperties.getAccessKey() : properties.getAccessKey();
+		/**
+		 * RAM账号Access Key Secret, 用于标识、校验用户身份
+		 */
+		String secretKey = StringUtils.hasText(mpsProperties.getSecretKey()) ? mpsProperties.getSecretKey() : properties.getSecretKey();
 		
 		// 创建DefaultAcsClient实例并初始化
-		DefaultProfile profile = DefaultProfile.getProfile(properties.getRegionId(), // 地域ID
-				properties.getAccessKey(), // RAM账号的AccessKey ID
-				properties.getSecretKey()); // RAM账号Access Key Secret
+		DefaultProfile profile = DefaultProfile.getProfile(mpsProperties.getRegionId(), accessKey,  secretKey);  
 		IAcsClient acsClient = new DefaultAcsClient(profile);
 		
-		return new AliyunMpsTemplate(acsClient, objectMapper, properties);
+		return new AliyunMpsTemplate(acsClient, objectMapper, mpsProperties);
 	}
 
 }
