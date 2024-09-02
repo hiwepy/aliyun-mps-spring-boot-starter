@@ -2,8 +2,8 @@ package com.aliyun.mps.spring.boot;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;

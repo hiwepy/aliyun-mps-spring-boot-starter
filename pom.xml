@@ -13,7 +13,7 @@
 	<groupId>com.github.hiwepy</groupId>
 	<artifactId>aliyun-mps-spring-boot-starter</artifactId>
 	<description>Spring Boot Starter For Aliyun MPS</description>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>2.3.x-20240823-SNAPSHOT</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<url>https://github.com/hiwepy/${project.artifactId}</url>
 	<packaging>jar</packaging>
@@ -21,7 +21,7 @@
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
 
@@ -50,10 +50,10 @@
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
-		    <id>ossrh</id>
+			<id>ossrh</id>
 			<name>Maven Central Staging Repository</name>
-		    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		  </repository>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 	</distributionManagement>
 
 	<build>
@@ -65,7 +65,6 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven-compiler-plugin.version}</version>
 					<configuration>
-						<defaultLibBundleDir>lib</defaultLibBundleDir>
 						<source>${java.version}</source>
 						<target>${java.version}</target>
 						<encoding>${project.build.sourceEncoding}</encoding>
@@ -146,9 +145,7 @@
 					<artifactId>maven-source-plugin</artifactId>
 					<version>${maven-source-plugin.version}</version>
 					<configuration>
-						<testFailureIgnore>true</testFailureIgnore>
 						<attach>true</attach>
-						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
 					<executions>
 						<execution>
@@ -190,7 +187,6 @@
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>${maven-jar-plugin.version}</version>
 					<configuration>
-						<encoding>${project.build.sourceEncoding}</encoding>
 						<skipIfEmpty>true</skipIfEmpty>
 						<archive>
 							<manifest>
@@ -206,8 +202,6 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${maven-javadoc-plugin.version}</version>
 					<configuration>
-						<aggregate>true</aggregate>
-						<argLine>-Dfile.encoding=UTF-8</argLine>
 						<charset>${project.build.sourceEncoding}</charset>
 						<encoding>${project.build.sourceEncoding}</encoding>
 						<docencoding>${project.build.sourceEncoding}</docencoding>
@@ -364,8 +358,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<aliyun-sdk-core.version>4.6.0</aliyun-sdk-core.version>
-		<aliyun-sdk-mts.version>3.3.45</aliyun-sdk-mts.version>
+		<aliyun-sdk-core.version>4.7.1</aliyun-sdk-core.version>
+		<aliyun-sdk-mts.version>3.3.63</aliyun-sdk-mts.version>
+		<fastjson2.version>2.0.52</fastjson2.version>
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
@@ -387,6 +382,29 @@
 			</snapshots>
 		</repository>
 	</repositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-core -->
+			<dependency>
+				<groupId>com.aliyun</groupId>
+				<artifactId>aliyun-java-sdk-core</artifactId>
+				<version>${aliyun-sdk-core.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-mts -->
+			<dependency>
+				<groupId>com.aliyun</groupId>
+				<artifactId>aliyun-java-sdk-mts</artifactId>
+				<version>${aliyun-sdk-mts.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
+			<dependency>
+				<groupId>com.alibaba.fastjson2</groupId>
+				<artifactId>fastjson2</artifactId>
+				<version>${fastjson2.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 
@@ -448,15 +466,17 @@
 		<dependency>
 		    <groupId>com.aliyun</groupId>
 		    <artifactId>aliyun-java-sdk-core</artifactId>
-		    <version>${aliyun-sdk-core.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-mts -->
 		<dependency>
 		    <groupId>com.aliyun</groupId>
 		    <artifactId>aliyun-java-sdk-mts</artifactId>
-		    <version>${aliyun-sdk-mts.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.alibaba.fastjson2</groupId>
+			<artifactId>fastjson2</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
