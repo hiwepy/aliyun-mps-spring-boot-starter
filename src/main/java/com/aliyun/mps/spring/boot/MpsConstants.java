@@ -17,7 +17,7 @@ package com.aliyun.mps.spring.boot;
 
 /**
  * TODO
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 public final class MpsConstants {
 
