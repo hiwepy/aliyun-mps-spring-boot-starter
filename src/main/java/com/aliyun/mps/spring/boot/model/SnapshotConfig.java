@@ -24,38 +24,49 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * TODO
+ * Snapshot output configuration for a Media Processing Service snapshot job.
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class SnapshotConfig {
 
+	/** Snapshot time, in seconds. */
 	@JsonProperty("Time")
 	private String time;
 
+	/** Snapshot interval, in seconds. */
 	@JsonProperty("Interval")
 	private String interval;
 
+	/** Number of snapshots to capture. */
 	@JsonProperty("Num")
 	private String num;
 
+	/** Width of each snapshot, in pixels. */
 	@JsonProperty("Width")
 	private String width;
 
+	/** Height of each snapshot, in pixels. */
 	@JsonProperty("Height")
 	private String height;
 
+	/** Frame type used when capturing the snapshot. */
 	@JsonProperty("FrameType")
 	private String frameType;
-	
+
+	/** The output file location for the captured snapshots. */
 	@JsonProperty("OutputFile")
 	private OutputFile outputFile;
-	
+
+	/** The output file location for the tiled snapshot image. */
 	@JsonProperty("TileOutputFile")
 	private TileOutputFile tileOutputFile;
-	
+
+	/** Tiled snapshot layout configuration. */
 	@JsonProperty("TileOut")
 	private TileOut tileOut;
-	
+
 }

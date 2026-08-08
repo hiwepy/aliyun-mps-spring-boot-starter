@@ -4,6 +4,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Data;
 
+/**
+ * Configuration properties for Alibaba Cloud Media Processing Service (MPS).
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(prefix = AliyunMpsProperties.PREFIX)
 @Data
 public class AliyunMpsProperties {
@@ -13,51 +19,42 @@ public class AliyunMpsProperties {
      */
     public static final String PREFIX = "alibaba.cloud.mps";
 
-    /**
-	 * PipelineId, 管道ID
-	 */
+    /** The pipeline id used to queue submitted jobs. */
 	private String pipelineId;
-    
+
     /**
-     * Region Id（服务地域ID）
-     * https://help.aliyun.com/document_detail/43248.html?spm=a2c4g.11186623.6.560.126f42c3AjZuPl
-     * https://help.aliyun.com/document_detail/40654.html?spm=a2c4g.11186623.2.11.37a77f248oCoPp#concept-h4v-j5k-xdb
+     * Region id of the MPS service. Defaults to {@code cn-hangzhou}.
+     * <p>See
+     * <a href="https://help.aliyun.com/document_detail/43248.html">region list</a> and
+     * <a href="https://help.aliyun.com/document_detail/40654.html">service endpoints</a>.</p>
      */
     private String regionId = "cn-hangzhou";
-    
-	/**
-	 * AccessKey, 用于标识、校验用户身份
-	 */
+
+	/** AccessKey id used to authenticate the MPS caller. */
 	private String accessKey;
-	/**
-	 * SecretKey, 用于标识、校验用户身份
-	 */
+	/** AccessKey secret used to authenticate the MPS caller. */
 	private String secretKey;
-	
+
 	/**
-     * OSS Bucket 所在数据中心（Region ID）（输入对象），默认：oss-cn-hangzhou
-     * <a href=
-     * "https://help.aliyun.com/document_detail/31837.html?spm=5176.8465980.0.0.4e701450EbA5gw#concept-zt4-cvy-5db">OSS Region和Endpoint对照表</a>.
+     * OSS location (region id) of the input bucket. Defaults to {@code oss-cn-hangzhou}.
+     * <p>See
+     * <a href="https://help.aliyun.com/document_detail/31837.html">OSS region/endpoint mapping</a>.</p>
      */
     private String ossLocation = "oss-cn-hangzhou";
 
-    /**
-     * OSS Bucket（输入对象）
-     */
+    /** OSS bucket that holds the input objects. */
     private String ossBucket;
-    
+
     /**
-     * OSS Bucket 所在数据中心（Region ID）（输出对象），不指定时与 ossLocation 相同；
-     * <a href=
-     * "https://help.aliyun.com/document_detail/31837.html?spm=5176.8465980.0.0.4e701450EbA5gw#concept-zt4-cvy-5db">OSS Region和Endpoint对照表</a>.
+     * OSS location (region id) of the output bucket. When unset it falls back to {@link #ossLocation}.
+     * <p>See
+     * <a href="https://help.aliyun.com/document_detail/31837.html">OSS region/endpoint mapping</a>.</p>
      */
     private String outputLocation;
-    
-    /**
-     * OSS Bucket（输出对象），不指定时与 ossBucket 相同
-     */
+
+    /** OSS bucket used to store output objects. When unset it falls back to {@link #ossBucket}. */
     private String outputBucket;
 
- 
+
 
 }

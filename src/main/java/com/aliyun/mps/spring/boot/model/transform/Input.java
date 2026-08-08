@@ -21,30 +21,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 作业输入，JSON对象，Input定义详见参数详情 。例如：{"Bucket":"example-bucket","Location":"oss-cn-hangzhou","Object":"example.flv"}需在控制台中完成云资源授权。 
- * https://help.aliyun.com/document_detail/29253.html?spm=a2c4g.11186623.2.14.53cb7b709JhnSM#reference-hhy-xc4-y2b
+ * Job input descriptor, serialised to a JSON object (see the Input parameter details).
+ * <p>Example: {@code {"Bucket":"example-bucket","Location":"oss-cn-hangzhou","Object":"example.flv"}}.
+ * Cloud resource authorisation must be completed in the console beforehand.</p>
+ * <p>See
+ * <a href="https://help.aliyun.com/document_detail/29253.html">the Input parameter reference</a>.</p>
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @JsonInclude( JsonInclude.Include.NON_NULL)
 @Data
 public class Input {
 
 	/**
-	 * 输入文件所在OSS Bucket。需在控制台中资源控制频道里的Bucket授权页面授予此Bucket读权限给媒体处理服务，遵守OSS Bucket定义，见术语表Bucket。
+	 * OSS bucket holding the input object. Read access must be granted to the Media Processing
+	 * Service on the Bucket authorisation page of the resource control console.
 	 */
 	@JsonProperty("Bucket")
 	private String bucket;
 
-	/**
-	 * 输入OSS Bucket所在数据中心（OSS Location）。遵守OSS Location定义，见术语表Location。
-	 */
+	/** OSS location (region id) of the input bucket. */
 	@JsonProperty("Location")
 	private String location;
 
 	/**
-	 * 输入文件 （OSS Object）。须进行UrlEncode，使用UTF-8编码，遵守OSS Object定义，见术语表Object。
+	 * Input file (OSS object key). Must be URL-encoded using UTF-8.
 	 */
 	@JsonProperty("Object")
 	private String object;
-	
+
 }

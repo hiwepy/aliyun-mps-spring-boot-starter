@@ -16,19 +16,31 @@
 package com.aliyun.mps.spring.boot;
 
 /**
- * 媒体处理
- * https://help.aliyun.com/document_detail/66804.html?spm=a2c4g.11186623.6.644.59ae7b70zmnWLk
+ * Base class for Alibaba Cloud Media Processing Service (MPS) operation helpers.
+ * <p>See <a href="https://help.aliyun.com/document_detail/66804.html">the MPS overview</a>.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public abstract class AliyunMpsOperations {
- 
+
+	/** The shared {@link AliyunMpsTemplate} used to invoke MPS APIs. */
 	protected AliyunMpsTemplate mpsTemplate;
 
+	/**
+	 * Creates an operation helper bound to the given template.
+	 * @param mpsTemplate the template used to execute MPS requests
+	 */
 	public AliyunMpsOperations(AliyunMpsTemplate mpsTemplate) {
 		this.mpsTemplate = mpsTemplate;
 	}
 
+	/**
+	 * Returns the underlying template.
+	 * @return the template used to execute MPS requests
+	 */
 	public AliyunMpsTemplate getMpsTemplate() {
 		return mpsTemplate;
 	}
-	
+
 }

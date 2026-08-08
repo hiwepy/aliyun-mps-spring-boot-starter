@@ -23,28 +23,35 @@ import com.aliyuncs.mts.model.v20140618.SearchPipelineResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 媒体处理
- * https://help.aliyun.com/document_detail/29196.html?spm=a2c4g.11186623.6.542.59ae7b70EKNHjP
+ * Pipeline-related operations for Alibaba Cloud Media Processing Service.
+ * <p>See <a href="https://help.aliyun.com/document_detail/29196.html">the pipeline documentation</a>.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @Slf4j
 public class AliyunMpsPipelineOperations extends AliyunMpsOperations {
 
+	/**
+	 * Creates pipeline operations bound to the given template.
+	 * @param mpsTemplate the template used to execute MPS requests
+	 */
 	public AliyunMpsPipelineOperations(AliyunMpsTemplate mpsTemplate) {
 		super(mpsTemplate);
 	}
-	
+
 	/**
-	 * 1、提交转码作业
-	 * API：
-	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
-	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
-	 * @param pipelineId 业务ID
-	 * @return 操作结果
+	 * Searches for pipelines.
+	 * <p>API references:
+	 * <a href="https://help.aliyun.com/document_detail/29226.html">SubmitJobs</a>,
+	 * <a href="https://help.aliyun.com/document_detail/67662.html">SearchPipeline</a>.</p>
+	 * @param pipelineId the target pipeline id
+	 * @return the search response, or {@code null} when the request fails
 	 */
 	public SearchPipelineResponse search(String pipelineId) {
-		// 创建API请求并设置参数
+		// Build the API request.
 	    SearchPipelineRequest request = new SearchPipelineRequest();
-	    // 发起请求并处理应答或异常
+	    // Send the request and handle the response or exceptions.
 	    SearchPipelineResponse response = null;
 	    try {
 	        response = getMpsTemplate().getAcsResponse(request);
@@ -52,10 +59,10 @@ public class AliyunMpsPipelineOperations extends AliyunMpsOperations {
 	        System.out.println("PipelineId is:" + response.getPipelineList().get(0).getId());
 	    } catch (ServerException e) {
 	        e.printStackTrace();
-	        log.error("服务端端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
+	        log.error("Server exception, ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    } catch (ClientException e) {
 	        e.printStackTrace();
-	        log.error("客户端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
+	        log.error("Client exception, ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    }
 	    return response;
 	}

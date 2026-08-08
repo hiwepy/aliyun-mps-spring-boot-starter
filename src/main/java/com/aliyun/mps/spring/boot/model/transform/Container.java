@@ -20,22 +20,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
+/**
+ * Output container configuration for a Media Processing Service transcode job.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @JsonInclude( JsonInclude.Include.NON_NULL)
 @Data
 public class Container {
 
 	/**
-	 * 容器格式;默认值：mp4 
+	 * Container format; defaults to {@code mp4}.
 	 * <ul>
-	 *  <li>视频转码支持flv、mp4、HLS（m3u8+ts）、MPEG-DASH（MPD+fMP4）</li>
-	 *  <li>音频转码支持mp3、mp4、ogg、flac、m4a</li>
-	 *  <li>图片支持gif、WEBP</li>
-	 *  <li>容器格式为gif时，Video Codec设置只能设置为GIF，</li>
-	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP，</li>
-	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
+	 *  <li>Video transcode supports flv, mp4, HLS (m3u8+ts), MPEG-DASH (MPD+fMP4)</li>
+	 *  <li>Audio transcode supports mp3, mp4, ogg, flac, m4a</li>
+	 *  <li>Image supports gif, WEBP</li>
+	 *  <li>When the container is gif the video codec must be GIF</li>
+	 *  <li>When the container is webp the video codec must be WEBP</li>
+	 *  <li>When the container is flv the video codec cannot be H.265</li>
 	 * </ul>
 	 */
 	@JsonProperty("Format")
     private String format = "mp4";
-	
+
 }

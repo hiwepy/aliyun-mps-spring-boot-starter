@@ -29,42 +29,48 @@ import com.aliyuncs.mts.model.v20140618.SubmitSnapshotJobResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 媒体处理
- * https://help.aliyun.com/document_detail/29196.html?spm=a2c4g.11186623.6.542.59ae7b70EKNHjP
+ * Snapshot operations for Alibaba Cloud Media Processing Service.
+ * <p>See <a href="https://help.aliyun.com/document_detail/29196.html">the snapshot documentation</a>.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @Slf4j
 public class AliyunMpsSnapshotOperations extends AliyunMpsOperations {
 
+	/**
+	 * Creates snapshot operations bound to the given template.
+	 * @param mpsTemplate the template used to execute MPS requests
+	 */
 	public AliyunMpsSnapshotOperations(AliyunMpsTemplate mpsTemplate) {
 		super(mpsTemplate);
 	}
-	
+
 	/**
-	 * 
-	 * 1、提交转码作业
-	 * API：
-	 * https://help.aliyun.com/document_detail/29226.html?spm=a2c4g.11186623.6.659.2dab3dbfqBWDro
-	 * https://help.aliyun.com/document_detail/67662.html?spm=a2c4g.11186623.6.757.6be33f00ikEQcR
-	 * @param pipelineId 管道ID。管道的定义详见术语表；若需要异步通知，须保证此管道绑定了可用的消息主题。
-	 * @param templateId 转码模板ID。支持自定义转码模板与系统预置模板。
-	 * @param inputLocation 输入OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param inputBucket 输入文件所在OSS Bucket， 例：example-bucket
-	 * @param inputObject 输入的文件名（OSS Object）
-	 * @param outputLocation 输出OSS Bucket 所在数据中心（OSS Location），例：oss-cn-hangzhou
-	 * @param outputBucket 输出的文件名（OSS Object）
-	 * @param outputObject 输出的文件名（OSS Object）
-	 * @param outputFormat 输出的文件名格式（ 默认值：mp4），
+	 * Submits a snapshot job.
+	 * <p>API references:
+	 * <a href="https://help.aliyun.com/document_detail/29226.html">SubmitJobs</a>,
+	 * <a href="https://help.aliyun.com/document_detail/67662.html">SubmitSnapshotJob</a>.</p>
+	 * @param pipelineId the pipeline id. For asynchronous notification the pipeline must be bound to a message topic.
+	 * @param templateId the transcode template id. Both custom and system-preset templates are supported.
+	 * @param inputLocation the OSS location of the input bucket, e.g. {@code oss-cn-hangzhou}
+	 * @param inputBucket the OSS bucket that holds the input object, e.g. {@code example-bucket}
+	 * @param inputObject the input file name (OSS object key)
+	 * @param outputLocation the OSS location of the output bucket, e.g. {@code oss-cn-hangzhou}
+	 * @param outputBucket the OSS bucket that holds the output object
+	 * @param outputObject the output file name (OSS object key)
+	 * @param outputFormat the output container format (defaults to {@code mp4}):
 	 * <ul>
-	 *  <li>视频转码支持flv、mp4、HLS（m3u8+ts）、MPEG-DASH（MPD+fMP4）</li>
-	 *  <li>音频转码支持mp3、mp4、ogg、flac、m4a</li>
-	 *  <li>图片支持gif、WEBP</li>
-	 *  <li>容器格式为gif时，Video Codec设置只能设置为GIF</li>
-	 *  <li>容器格式为webp时，Video Codec设置只能设置为WEBP</li>
-	 *  <li>容器格式为flv时，Video Codec不能设置为H.265。</li>
+	 *  <li>Video transcode supports flv, mp4, HLS (m3u8+ts), MPEG-DASH (MPD+fMP4)</li>
+	 *  <li>Audio transcode supports mp3, mp4, ogg, flac, m4a</li>
+	 *  <li>Image supports gif, WEBP</li>
+	 *  <li>When the container is gif the video codec must be GIF</li>
+	 *  <li>When the container is webp the video codec must be WEBP</li>
+	 *  <li>When the container is flv the video codec cannot be H.265</li>
 	 * </ul>
-	 * @param config 输出配置
-	 * @return 操作结果
-	 * @throws IOException 如果错则抛出异常
+	 * @param config the snapshot output configuration
+	 * @return the submit response, or {@code null} when the request fails
+	 * @throws IOException if the object key cannot be URL-encoded
 	 */
 	public SubmitSnapshotJobResponse submitJob(
 			String pipelineId, 
@@ -78,7 +84,7 @@ public class AliyunMpsSnapshotOperations extends AliyunMpsOperations {
 			String outputFormat,
 			SnapshotConfig config) throws IOException {
 		
-        // 1、转码输入参数
+        // 1. Build the transcode input parameters.
  		Input input = new Input();
  		input.setBucket(inputBucket);
  		input.setLocation(inputLocation);
@@ -101,7 +107,7 @@ public class AliyunMpsSnapshotOperations extends AliyunMpsOperations {
         // SnapshotConfig->Width/Height
         //snapshotConfig.put("Height", "360");
 
-        // request
+        // Build the request.
         SubmitSnapshotJobRequest request = new SubmitSnapshotJobRequest();
         
         request.setInput(getMpsTemplate().writeValueAsString(input));
@@ -112,8 +118,13 @@ public class AliyunMpsSnapshotOperations extends AliyunMpsOperations {
 		
 	}
 	
+	/**
+	 * Submits a snapshot job from a pre-built request.
+	 * @param request the snapshot job request
+	 * @return the submit response, or {@code null} when the request fails
+	 */
 	public SubmitSnapshotJobResponse submitJob(SubmitSnapshotJobRequest request) {
-		// call api
+		// Call the API.
         SubmitSnapshotJobResponse response = null;
         try {
             response = getMpsTemplate().getAcsResponse(request);
@@ -121,10 +132,10 @@ public class AliyunMpsSnapshotOperations extends AliyunMpsOperations {
             log.debug("JobId is:{}", response.getSnapshotJob().getId());
         } catch (ServerException e) {
 	        e.printStackTrace();
-	        log.error("服务端端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
+	        log.error("Server exception, ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    } catch (ClientException e) {
 	        e.printStackTrace();
-	        log.error("客户端异常， ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
+	        log.error("Client exception, ErrorType : {}, ErrorCode : {}, ErrMsg : {}", e.getErrorType(), e.getErrCode(),  e.getErrMsg());
 	    }
 		return response;
 	}

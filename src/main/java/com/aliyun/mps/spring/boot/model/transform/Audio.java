@@ -20,54 +20,56 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
+/**
+ * Audio stream configuration for a Media Processing Service transcode job.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class Audio {
 
-	/**
-	 */
+	/** Audio codec, e.g. {@code aac}, {@code mp3}. */
 	@JsonProperty("Codec")
 	private String codec;
 
-	/**
-	 */
+	/** Audio codec profile. */
 	@JsonProperty("Profile")
 	private String profile;
 
-	/**
-	 */
+	/** Audio sample rate, in Hz. */
 	@JsonProperty("Samplerate")
 	private String samplerate;
 
-	/**
-	 */
+	/** Audio bitrate, in Kbps. */
 	@JsonProperty("Bitrate")
 	private String bitrate;
 
-	/**
-	 */
+	/** Number of audio channels. */
 	@JsonProperty("Channels")
 	private String channels;
 
-	/**
-	 */
+	/** Quality scale. */
 	@JsonProperty("Qscale")
 	private String qscale;
 
-	/**
-	 */
+	/** Volume control configuration. */
 	@JsonProperty("Volume")
 	private Volume volume;
-	
+
+	/** Audio volume control parameters. */
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@Data
 	public static class Volume {
 
+		/** Target volume level. */
 		@JsonProperty("Level")
 		private String level;
 
+		/** Volume adjustment method. */
 		@JsonProperty("Method")
 		private String method;
-		 
+
 	}
 }

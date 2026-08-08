@@ -19,25 +19,40 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 
+/**
+ * Tiled snapshot layout configuration for a Media Processing Service snapshot job.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class TileOut {
 
+	/** Number of rows in the tile grid. */
 	private String lines;
 
+	/** Number of columns in the tile grid. */
 	private String columns;
 
+	/** Width of each cell, in pixels. */
 	private String cellWidth;
 
+	/** Height of each cell, in pixels. */
 	private String cellHeight;
 
+	/** Outer margin of the tile grid, in pixels. */
 	private String margin;
 
+	/** Padding between cells, in pixels. */
 	private String padding;
 
+	/** Background colour of the tile grid. */
 	private String color;
 
+	/** Whether to keep the original cell pictures. */
 	private String isKeepCellPic;
 
+	/** Cell selection step. */
 	private String cellSelStep;
 }

@@ -21,96 +21,88 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * TODO
+ * Simple transcode output descriptor (format conversion only).
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class OutputSimple {
-	
-	/**
-	 * 转码模板ID。支持自定义转码模板与系统预置模板。
-	 */
+
+	/** Transcode template id. Both custom and system-preset templates are supported. */
 	@JsonProperty("TemplateId")
 	private String templateId;
 
-	/**
-	 * 如设置则覆盖指定转码模版中的对应参数，参见 Container详情。
-	 */
+	/** When set, overrides the matching parameter of the referenced transcode template (see Container). */
 	@JsonProperty("Container")
 	public Container container;
-	
+
 	/**
-	 * 输出的文件名（OSS Object）。
+	 * Output file name (OSS object key).
 	 * <ul>
-	 *  <li>须进行Url Encode，使用UTF-8编码。</li>
-	 *  <li> 占位符替换示例：转码输入文件若为a/b/c.flv，若OutputObject设置为%7BObjectPrefix%7D%7BFileName%7Dtest.mp4，那么转码输出文件名：a/b/ctest.mp4</li>
-	 *  <li>默认值：6</li>
+	 *  <li>Must be URL-encoded using UTF-8.</li>
+	 *  <li>Placeholder example: when the input file is {@code a/b/c.flv} and OutputObject is
+	 *      {@code %7BObjectPrefix%7D%7BFileName%7Dtest.mp4} the resulting output name is {@code a/b/ctest.mp4}</li>
 	 * </ul>
-	 *  输出文件名支持占位符替换规则：
+	 *  Output file name placeholders:
 	 * <ul>
-	 *  <li>工作流支持的占位符：代表输入文件前缀的{ObjectPrefix}、代表输入文件名的{FileName}、代表输入文件扩展名的{ExtName}、代表转码输出文件Md5值 的{DestMd5}、代表转码输出文件平均码率的{DestAvgBitrate}，以及代表媒体工作流执行实例ID的{RunId},代表工作流所处理媒体ID的{MediaId}的动态替换。</li>
-	 *  <li>非工作流支持的占位符：{ObjectPrefix}、{FileName}、{ExtName}、{DestMd5}、{DestAvgBitrate}</li>
+	 *  <li>Workflow placeholders: {ObjectPrefix} (input file prefix), {FileName} (input file name),
+	 *      {ExtName} (input file extension), {DestMd5} (output md5), {DestAvgBitrate} (output average bitrate),
+	 *      {RunId} (workflow execution instance id) and {MediaId} (the media id processed by the workflow).</li>
+	 *  <li>Non-workflow placeholders: {ObjectPrefix}, {FileName}, {ExtName}, {DestMd5}, {DestAvgBitrate}</li>
 	 * </ul>
-	 *  关于文件扩展名规则：
+	 *  File extension rules:
 	 * <ul>
-	 *  <li>工作流：根据转码模板容器格式自动在OutputObject后边添加扩展名。</li>
-	 *  <li>非工作流：不会自动添加扩展名，但如果容器类型为m3u8，则媒体处理服务会给Playlist自动添加扩展名 .m3u8 ，分片文件名会在Playlist后自动加一个从00001开始的5位</li>
-	 *  <li>序列号为后缀并以 - 号相连，文件扩展名为 .ts。</li>
-	 *  <li>例如：Playlist文件名为filename.m3u8，则输出第一个ts分片文件为filename-00001.ts。</li>
+	 *  <li>Workflow: appends an extension based on the template container format.</li>
+	 *  <li>Non-workflow: no automatic extension; for m3u8 containers the playlist is suffixed with {@code .m3u8}
+	 *      and ts segments are named with a 5-digit sequence number starting from {@code 00001} joined by {@code -},
+	 *      e.g. playlist {@code filename.m3u8} produces a first segment {@code filename-00001.ts}.</li>
 	 * </ul>
 	 */
 	@JsonProperty("OutputObject")
 	private String outputObject;
-	
-	/**
-	 * 用户自定义数据，最大长度1024个字节。
-	 */
+
+	/** User-defined data, up to 1024 bytes. */
 	@JsonProperty("UserData")
 	private String userData;
 
-	/**
-	 * 视频旋转角度。范围：[0，360)，顺时针。
-	 */
+	/** Video rotation angle. Range [0, 360), clockwise. */
 	@JsonProperty("Rotate")
 	public String rotate;
 
-	/**
-	 * 模糊处理，JSON对象。参见模糊处理详情。
-	 */
+	/** De-watermark (blurring) configuration, serialised to a JSON object. */
 	@JsonProperty("DeWatermark")
 	private String deWatermark;
 
 	/**
-	 * 任务在其对应管道内的转码优先级。
+	 * Transcode priority of the job within its pipeline.
 	 * <ul>
-	 *  <li>范围：[1-10]，</li>
-	 *  <li>最高优先级：10</li>
-	 *  <li>默认值：6</li>
+	 *  <li>Range: [1-10]</li>
+	 *  <li>Highest priority: 10</li>
+	 *  <li>Default: 6</li>
 	 * </ul>
 	 */
 	@JsonProperty("Priority")
 	private String priority = "6";
 
-	/**
-	 * 如设置则覆盖指定转码模版中的对应参数，参见Audio详情。 
-	 */
+	/** When set, overrides the matching parameter of the referenced transcode template (see Audio). */
 	@JsonProperty("Audio")
 	public Audio audio;
 
 	/**
-	 * 音频流序号。  格式：0:a:{序号}，序号从0开始，  序号的含义是音频流列表的下标，示例：0:a:0，若不设置，选择默认的音频流。
+	 * Audio stream selector. Format {@code 0:a:{index}} where the index is 0-based and refers to
+	 * the audio stream list, e.g. {@code 0:a:0}. When unset the default audio stream is used.
 	 */
 	@JsonProperty("AudioStreamMap")
 	private String audioStreamMap;
-	
-	/**
-	 * 如设置则覆盖指定转码模版中的对应参数，参见Video详情。
-	 */
+
+	/** When set, overrides the matching parameter of the referenced transcode template (see Video). */
 	@JsonProperty("Video")
 	public Video video;
 
+	/** Video stream selector. */
 	@JsonProperty("VideoStreamMap")
 	private String videoStreamMap;
- 
+
 }

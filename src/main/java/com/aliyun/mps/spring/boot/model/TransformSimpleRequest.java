@@ -25,23 +25,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 简单的媒体处理参数对象（仅做格式转换）
+ * Simple media-processing parameters (format conversion only).
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @JsonInclude( JsonInclude.Include.NON_NULL)
 @Data
 public class TransformSimpleRequest {
 
-	/**
-	 * 作业输入，JSON对象，Input定义详见参数详情 。
-	 */
+	/** Job input, serialised to a JSON object (see the Input parameter details). */
 	@JsonProperty("Input")
 	public Input input;
-	
-	/**
-	 * 作业输出，JSON对象，Output定义详见参数详情 。
-	 */
+
+	/** Job outputs, serialised to a JSON object (see the Output parameter details). */
 	@JsonProperty("Outputs")
 	public List<OutputSimple> outputs;
-	
+
 }
