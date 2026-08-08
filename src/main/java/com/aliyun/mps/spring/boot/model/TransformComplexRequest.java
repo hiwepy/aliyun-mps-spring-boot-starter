@@ -26,7 +26,7 @@ import lombok.Data;
 
 /**
  * 复杂的媒体处理参数对象（支持格式转换、拼接、剪辑）
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 @JsonInclude( JsonInclude.Include.NON_NULL)
 @Data
