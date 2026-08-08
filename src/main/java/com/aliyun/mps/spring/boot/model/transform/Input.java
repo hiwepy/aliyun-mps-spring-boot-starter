@@ -23,7 +23,7 @@ import lombok.Data;
 /**
  * 作业输入，JSON对象，Input定义详见参数详情 。例如：{"Bucket":"example-bucket","Location":"oss-cn-hangzhou","Object":"example.flv"}需在控制台中完成云资源授权。 
  * https://help.aliyun.com/document_detail/29253.html?spm=a2c4g.11186623.2.14.53cb7b709JhnSM#reference-hhy-xc4-y2b
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 @JsonInclude( JsonInclude.Include.NON_NULL)
 @Data
