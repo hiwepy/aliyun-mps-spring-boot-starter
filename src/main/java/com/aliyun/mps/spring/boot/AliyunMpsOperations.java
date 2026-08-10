@@ -19,7 +19,7 @@ package com.aliyun.mps.spring.boot;
  * Base class for Alibaba Cloud Media Processing Service (MPS) operation helpers.
  * <p>See <a href="https://help.aliyun.com/document_detail/66804.html">the MPS overview</a>.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public abstract class AliyunMpsOperations {

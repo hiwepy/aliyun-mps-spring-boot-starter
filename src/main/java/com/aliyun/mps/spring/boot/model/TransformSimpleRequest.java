@@ -27,7 +27,7 @@ import lombok.Data;
 /**
  * Simple media-processing parameters (format conversion only).
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @JsonInclude( JsonInclude.Include.NON_NULL)
