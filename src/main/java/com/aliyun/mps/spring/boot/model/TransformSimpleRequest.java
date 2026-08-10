@@ -26,7 +26,7 @@ import lombok.Data;
 
 /**
  * 简单的媒体处理参数对象（仅做格式转换）
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 @JsonInclude( JsonInclude.Include.NON_NULL)
 @Data
